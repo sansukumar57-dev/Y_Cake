@@ -1,0 +1,114 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         String   @default("USER")
+  createdAt    DateTime @default(now())
+
+  designs Design[]
+  orders  Order[]
+
+  @@index([email])
+}
+
+model CakeSize {
+  id             String  @id
+  name           String
+  description    String
+  tiers          Int
+  servings       Int
+  basePriceCents Int
+  active         Boolean @default(true)
+  sortOrder      Int     @default(0)
+}
+
+model Flavor {
+  id          String  @id
+  name        String
+  description String
+  priceCents  Int     @default(0)
+  active      Boolean @default(true)
+  sortOrder   Int     @default(0)
+}
+
+model Frosting {
+  id          String  @id
+  name        String
+  description String
+  priceCents  Int     @default(0)
+  active      Boolean @default(true)
+  sortOrder   Int     @default(0)
+}
+
+model Decoration {
+  id          String  @id
+  name        String
+  description String
+  priceCents  Int     @default(0)
+  icon        String
+  active      Boolean @default(true)
+  sortOrder   Int     @default(0)
+}
+
+model Design {
+  id         String   @id @default(cuid())
+  userId     String
+  name       String
+  configJson String
+  priceCents Int
+  thumbnail  String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  orders Order[]
+
+  @@index([userId])
+}
+
+model Order {
+  id              String   @id @default(cuid())
+  orderNumber     String   @unique
+  userId          String?
+  designId        String?
+  designName      String
+  configJson      String
+  snapshotJson    String
+  totalCents      Int
+  customerName    String
+  email           String
+  phone           String
+  pickupDate      String
+  pickupSlot      String
+  notes           String?
+  status          String   @default("PENDING")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+  design Design? @relation(fields: [designId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([status])
+  @@index([pickupDate])
+}
+
+model Preset {
+  id          String  @id
+  name        String
+  tagline     String
+  description String
+  configJson  String
+  featured    Boolean @default(false)
+  sortOrder   Int     @default(0)
+}
