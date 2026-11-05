@@ -21,9 +21,12 @@ function flower(
   const petal = tone === "rose" ? "#C98B84" : "#DCAFA7";
   const petals = Array.from({ length: 6 }, (_, index) => {
     const angle = (index / 6) * Math.PI * 2;
+    // Rounded to 2 decimals so server and client serialize identical
+    // strings (Math.sin/cos are not guaranteed to be bit-identical
+    // across JavaScript engines, which trips hydration).
     return {
-      x: Math.cos(angle) * 6.5,
-      y: Math.sin(angle) * 6.5,
+      x: Math.round(Math.cos(angle) * 650) / 100,
+      y: Math.round(Math.sin(angle) * 650) / 100,
     };
   });
 

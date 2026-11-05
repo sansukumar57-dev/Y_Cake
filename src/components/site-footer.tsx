@@ -5,7 +5,7 @@ import { buttonVariants } from "@/components/ui/button";
 
 const exploreLinks = [
   { href: "/studio", label: "Design studio" },
-  { href: "/gallery", label: "The collection" },
+  { href: "/gallery", label: "The cakes" },
   { href: "/#story", label: "Our story" },
   { href: "/#process", label: "How it works" },
 ];
@@ -18,7 +18,7 @@ const visitLinks = [
 
 export function SiteFooter() {
   return (
-    <footer className="mt-auto bg-espresso text-cream">
+    <footer className="mt-auto bg-chocolate-deep text-cream">
       <div className="container-page py-14 sm:py-16">
         <div className="flex flex-col gap-10 border-b border-cream/12 pb-12 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-xl">

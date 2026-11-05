@@ -42,7 +42,7 @@ export function Logo({
             light ? "text-cream/55" : "text-mocha",
           )}
         >
-          ATELIER
+          CAKES &amp; MORE
         </span>
       </span>
     </Link>

@@ -8,7 +8,7 @@ import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   title: {
-    default: "Y Cake Atelier — Design a cake as singular as the moment",
+    default: "Y Cake Atelier — Cakes & more, freshly baked",
     template: "%s · Y Cake Atelier",
   },
   description:

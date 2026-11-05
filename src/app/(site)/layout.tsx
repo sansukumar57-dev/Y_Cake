@@ -1,6 +1,7 @@
 import { getSessionUser } from "@/lib/auth";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
+import { MobileTabBar } from "@/components/mobile-tab-bar";
 
 export default async function SiteLayout({
   children,
@@ -16,6 +17,7 @@ export default async function SiteLayout({
         {children}
       </main>
       <SiteFooter />
+      <MobileTabBar />
     </div>
   );
 }

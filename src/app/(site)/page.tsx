@@ -2,19 +2,26 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import {
   ArrowRight,
-  ArrowUpRight,
+  CakeSlice,
+  ChefHat,
+  ChevronRight,
+  Heart,
+  Leaf,
   MoveUpRight,
+  Plus,
   Sparkles,
+  Star,
+  Timer,
 } from "lucide-react";
 import { getFeaturedPresets, getPresets } from "@/lib/data";
 import { CakePreview } from "@/components/cake/CakePreview";
 import { CakeIllustration } from "@/components/cake/CakeIllustration";
 import { PresetCard } from "@/components/preset-card";
 import { buttonVariants } from "@/components/ui/button";
-import { formatPrice } from "@/lib/utils";
+import { formatPrice, initials } from "@/lib/utils";
 
 export const metadata: Metadata = {
-  title: "Custom cakes, designed by you — Brooklyn",
+  title: "Cakes & more, freshly baked — Brooklyn",
   description:
     "Compose every tier, flavor, and flourish in the Y Cake Atelier 3D studio. Small-batch cakes made to order in Brooklyn and picked up fresh.",
 };
@@ -34,6 +41,50 @@ const processSteps = [
     number: "03",
     title: "Gather",
     body: "Collect your cake in Brooklyn, boxed with candles and care, ready for the table.",
+  },
+];
+
+const whyItems = [
+  {
+    icon: Leaf,
+    title: "Real ingredients",
+    body: "Butter, cream, vanilla, and fruit in season. Nothing artificial, ever.",
+  },
+  {
+    icon: ChefHat,
+    title: "Baked in-house",
+    body: "One small kitchen in Brooklyn bakes and finishes every cake by hand.",
+  },
+  {
+    icon: Timer,
+    title: "Ready in three days",
+    body: "Most cakes need three days' notice; larger designs a fortnight.",
+  },
+  {
+    icon: Heart,
+    title: "Loved by guests",
+    body: "50,000+ cakes have left our kitchen since the first bake in 2015.",
+  },
+];
+
+const reviews = [
+  {
+    name: "Anna Petrova",
+    date: "12 May",
+    quote:
+      "The chocolate truffle was soft, airy, and not too sweet. It disappeared in minutes — we are already planning the next one.",
+  },
+  {
+    name: "Igor Stevens",
+    date: "26 May",
+    quote:
+      "They helped me choose the tiers and the inscription, and pickup took two minutes. Everything was boxed and ready.",
+  },
+  {
+    name: "Maria Rossi",
+    date: "3 Jun",
+    quote:
+      "We asked for a garden cake for a small wedding. It looked exactly like the studio preview and tasted even better.",
   },
 ];
 
@@ -65,28 +116,69 @@ const faqs = [
   },
 ];
 
+function StarRow({ className }: { className?: string }) {
+  return (
+    <span className={`flex items-center gap-1 ${className ?? ""}`}>
+      {Array.from({ length: 5 }).map((_, index) => (
+        <Star
+          key={index}
+          className="h-3.5 w-3.5 fill-gold text-gold"
+          aria-hidden="true"
+        />
+      ))}
+    </span>
+  );
+}
+
 export default async function HomePage() {
   const [featured, allPresets] = await Promise.all([
     getFeaturedPresets(3),
     getPresets(),
   ]);
   const hero = featured[0] ?? allPresets[0] ?? null;
-  const collection = featured.length ? featured : allPresets.slice(0, 3);
-  const studioPreset = allPresets[3] ?? allPresets[0] ?? null;
+  const popular = allPresets.slice(0, 4);
+  const studioPreset = allPresets[4] ?? allPresets[1] ?? null;
+
+  const startTiles = [
+    {
+      href: "/gallery",
+      title: "The cakes",
+      subtitle: "Six designs to start from",
+      icon: CakeSlice,
+      tone: "bg-rose-soft/60",
+    },
+    {
+      href: "/studio",
+      title: "Blank canvas",
+      subtitle: "Compose your own tiers",
+      icon: Sparkles,
+      tone: "bg-sage-soft/70",
+    },
+    ...(hero
+      ? [
+          {
+            href: `/studio?preset=${hero.id}`,
+            title: hero.name,
+            subtitle: "The signature cake",
+            icon: Star,
+            tone: "bg-gold-soft/50",
+          },
+        ]
+      : []),
+  ];
 
   return (
     <>
       <section className="hero-wash relative overflow-hidden">
-        <div className="container-page grid items-center gap-12 pb-24 pt-10 lg:grid-cols-[1.02fr_0.98fr] lg:gap-16 lg:pb-32 lg:pt-16">
+        <div className="container-page grid items-center gap-12 pb-20 pt-10 lg:grid-cols-[1.02fr_0.98fr] lg:gap-16 lg:pb-28 lg:pt-16">
           <div className="animate-rise max-w-xl">
             <p className="eyebrow flex items-center gap-3">
               <span className="h-px w-8 bg-gold" aria-hidden="true" />
-              Custom cakes · Brooklyn
+              Cakes &amp; more · Brooklyn
             </p>
-            <h1 className="mt-6 font-display text-[clamp(3rem,7.2vw,5.7rem)] leading-[0.94] tracking-[-0.045em] text-espresso">
-              A cake as{" "}
-              <span className="serif-italic text-rose">singular</span> as the
-              moment.
+            <h1 className="mt-6 font-display text-[clamp(3rem,7.2vw,5.4rem)] leading-[0.94] tracking-[-0.045em] text-espresso">
+              Freshly baked cakes,{" "}
+              <span className="serif-italic text-rose">made with love.</span>
             </h1>
             <p className="mt-7 max-w-md text-[15.5px] leading-[1.75] text-cocoa">
               Layer by layer, build a cake that feels entirely yours — then
@@ -94,78 +186,76 @@ export default async function HomePage() {
               fresh in Brooklyn.
             </p>
 
-            <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
-              <Link
-                href="/studio"
-                className={buttonVariants({ size: "lg" })}
-              >
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+              <Link href="/studio" className={buttonVariants({ size: "lg" })}>
                 Design your cake
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Link>
               <Link
                 href="/gallery"
-                className={buttonVariants({ variant: "ghost", size: "lg" })}
+                className={buttonVariants({ variant: "secondary", size: "lg" })}
               >
-                Explore the collection
+                Browse the cakes
               </Link>
             </div>
 
-            <div className="mt-12 flex flex-wrap items-center gap-x-6 gap-y-2 text-[11.5px] text-mocha">
-              <span className="flex items-center gap-2">
-                <span className="h-1 w-1 rounded-full bg-gold" />
-                Small-batch baking
-              </span>
-              <span className="flex items-center gap-2">
-                <span className="h-1 w-1 rounded-full bg-gold" />
-                Hand-finished
-              </span>
-              <span className="flex items-center gap-2">
-                <span className="h-1 w-1 rounded-full bg-gold" />
-                Pickup in Brooklyn
-              </span>
+            <div className="mt-9 flex flex-wrap items-center gap-x-5 gap-y-3">
+              <StarRow />
+              <p className="text-[12.5px] text-cocoa">
+                <span className="font-semibold text-espresso">4.9</span>
+                <span className="text-mocha"> · 128 guest reviews</span>
+              </p>
+              <span
+                className="hidden h-1 w-1 rounded-full bg-gold sm:block"
+                aria-hidden="true"
+              />
+              <p className="flex items-center gap-2 text-[12.5px] text-cocoa">
+                <Sparkles className="h-3.5 w-3.5 text-gold" aria-hidden="true" />
+                Small-batch · Pickup in Brooklyn
+              </p>
             </div>
           </div>
 
           <div className="animate-fade delay-2 relative mx-auto w-full max-w-[540px]">
             <div className="arch-frame relative aspect-[4/5] overflow-hidden border border-white/70 bg-gradient-to-b from-rose-soft/45 via-cream to-sage-soft/55 shadow-soft">
               {hero ? (
-                <CakePreview resolved={hero.resolved} />
+                <>
+                  <CakePreview resolved={hero.resolved} />
+                  <span className="pointer-events-none absolute left-1/2 top-4 -translate-x-1/2 whitespace-nowrap rounded-full border border-white/60 bg-cream/85 px-3 py-1.5 text-[9.5px] font-medium uppercase tracking-[0.16em] text-cocoa shadow-soft backdrop-blur-md">
+                    The signature
+                  </span>
+                  <Link
+                    href={`/studio?preset=${hero.id}`}
+                    className="group absolute inset-x-4 bottom-4 z-10 flex items-center justify-between gap-4 rounded-xl border border-white/70 bg-cream/92 p-4 shadow-lift backdrop-blur-md transition-colors hover:border-mocha/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
+                  >
+                    <span className="min-w-0">
+                      <span className="block truncate font-display text-[1.3rem] leading-none text-espresso">
+                        {hero.name}
+                      </span>
+                      <span className="mt-1.5 block text-[11px] text-mocha">
+                        {hero.resolved.size.tiers} tiers · serves{" "}
+                        {hero.resolved.servings}
+                      </span>
+                    </span>
+                    <span className="flex shrink-0 items-center gap-3">
+                      <span className="text-[14px] font-semibold text-espresso">
+                        {formatPrice(hero.resolved.price.totalCents)}
+                      </span>
+                      <span
+                        className="grid h-9 w-9 place-items-center rounded-full bg-chocolate text-cream transition-transform duration-200 group-hover:scale-105"
+                        aria-hidden="true"
+                      >
+                        <Plus className="h-4 w-4" />
+                      </span>
+                    </span>
+                  </Link>
+                </>
               ) : (
                 <div className="flex h-full items-center justify-center p-10 text-center font-display text-2xl text-cocoa">
                   Your cake begins here.
                 </div>
               )}
             </div>
-            {hero ? (
-              <Link
-                href={`/studio?preset=${hero.id}`}
-                className="group relative z-10 mx-auto -mt-8 block w-[86%] rounded-xl border border-sand/80 bg-cream/95 p-4 shadow-lift backdrop-blur-md transition-colors hover:border-mocha/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
-              >
-                <div className="flex items-center justify-between gap-4">
-                  <div>
-                    <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-mocha">
-                      The signature
-                    </p>
-                    <p className="mt-1 font-display text-[1.35rem] leading-none text-espresso">
-                      {hero.name}
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-[11px] text-mocha">
-                      {hero.resolved.size.tiers} tiers · serves{" "}
-                      {hero.resolved.servings}
-                    </p>
-                    <p className="mt-1 text-[13px] font-medium text-espresso">
-                      from {formatPrice(hero.resolved.price.totalCents)}
-                    </p>
-                  </div>
-                  <ArrowUpRight
-                    className="h-4 w-4 shrink-0 text-mocha transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-                    aria-hidden="true"
-                  />
-                </div>
-              </Link>
-            ) : null}
           </div>
         </div>
       </section>
@@ -182,32 +272,221 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {collection.length ? (
-        <section className="container-page py-20 sm:py-28">
-          <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
-            <div className="max-w-2xl">
-              <p className="eyebrow">The collection</p>
-              <h2 className="mt-4 font-display text-[clamp(2.2rem,4.6vw,3.65rem)] leading-[1.02] tracking-[-0.035em]">
-                Starting points,{" "}
-                <span className="serif-italic text-mocha">not prescriptions.</span>
-              </h2>
-            </div>
+      <section className="container-page py-12 sm:py-16">
+        <div className="grid gap-4 sm:grid-cols-3">
+          {startTiles.map((tile) => (
             <Link
-              href="/gallery"
-              className="group inline-flex w-fit items-center gap-2 border-b border-espresso/20 pb-1 text-[13px] text-espresso transition-colors hover:border-espresso"
+              key={tile.href}
+              href={tile.href}
+              className="group flex items-center gap-4 rounded-2xl border border-sand/70 bg-[#fffdfa] p-4 transition-colors hover:border-mocha/35 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-4 focus-visible:ring-offset-cream"
             >
-              View the full collection
-              <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden="true" />
+              <span
+                className={`grid h-12 w-12 shrink-0 place-items-center rounded-full ${tile.tone}`}
+              >
+                <tile.icon className="h-5 w-5 text-espresso" aria-hidden="true" />
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="block truncate text-[13.5px] font-medium text-espresso">
+                  {tile.title}
+                </span>
+                <span className="mt-0.5 block truncate text-[11.5px] text-mocha">
+                  {tile.subtitle}
+                </span>
+              </span>
+              <ChevronRight
+                className="h-4 w-4 shrink-0 text-mocha transition-transform duration-200 group-hover:translate-x-0.5"
+                aria-hidden="true"
+              />
             </Link>
-          </div>
+          ))}
+        </div>
+      </section>
 
-          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {collection.map((preset, index) => (
-              <PresetCard key={preset.id} preset={preset} index={index} />
-            ))}
+      {popular.length ? (
+        <section id="popular" className="border-y border-sand/60 bg-porcelain/70">
+          <div className="container-page py-20 sm:py-24">
+            <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+              <div className="max-w-xl">
+                <p className="eyebrow">Popular right now</p>
+                <h2 className="mt-4 font-display text-[clamp(2.2rem,4.6vw,3.4rem)] leading-[1.02] tracking-[-0.035em]">
+                  Cakes people{" "}
+                  <span className="serif-italic text-mocha">
+                    keep coming back to.
+                  </span>
+                </h2>
+              </div>
+              <Link
+                href="/gallery"
+                className="group inline-flex w-fit items-center gap-2 border-b border-espresso/20 pb-1 text-[13px] text-espresso transition-colors hover:border-espresso"
+              >
+                See all cakes
+                <ArrowRight
+                  className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5"
+                  aria-hidden="true"
+                />
+              </Link>
+            </div>
+
+            <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              {popular.map((preset, index) => (
+                <PresetCard key={preset.id} preset={preset} index={index} />
+              ))}
+            </div>
           </div>
         </section>
       ) : null}
+
+      <section className="container-page py-16 sm:py-20">
+        <div className="relative overflow-hidden rounded-[2.5rem] bg-chocolate-deep text-cream">
+          <div
+            className="pointer-events-none absolute inset-0 opacity-70"
+            style={{
+              background:
+                "radial-gradient(80% 120% at 15% 0%, rgba(201,139,132,0.28), transparent 60%), radial-gradient(70% 110% at 90% 100%, rgba(217,194,155,0.18), transparent 60%)",
+            }}
+            aria-hidden="true"
+          />
+          <div className="relative grid items-center gap-10 p-8 sm:p-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-14 lg:px-16 lg:py-14">
+            <div>
+              <p className="eyebrow text-cream/50">
+                Special cakes for special moments
+              </p>
+              <h2 className="mt-4 font-display text-[clamp(2rem,4.2vw,3.1rem)] leading-[1.04] tracking-[-0.035em] text-cream">
+                Birthdays, weddings, or a quiet Tuesday —{" "}
+                <span className="serif-italic text-gold-soft">
+                  we&apos;ll bake the cake.
+                </span>
+              </h2>
+              <p className="mt-5 max-w-md text-[14px] leading-relaxed text-cream/65">
+                Composed by you in the studio, finished by hand the morning of
+                your pickup.
+              </p>
+              <div className="mt-7 flex flex-wrap items-center gap-4">
+                <Link
+                  href="/studio"
+                  className={buttonVariants({ variant: "light", size: "lg" })}
+                >
+                  Order now
+                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                </Link>
+                <p className="text-[11.5px] text-cream/50">
+                  Most cakes need 3 days&apos; notice
+                </p>
+              </div>
+            </div>
+            <div className="mx-auto w-full max-w-[360px]">
+              {studioPreset ? (
+                <div className="rounded-3xl bg-blush/95 p-1 shadow-lift">
+                  <div className="overflow-hidden rounded-[1.25rem] bg-gradient-to-b from-blush-soft to-blush">
+                    <CakeIllustration
+                      resolved={studioPreset.resolved}
+                      className="h-full w-full"
+                      showHalo={false}
+                    />
+                  </div>
+                </div>
+              ) : null}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="border-y border-sand/60 bg-blush-soft/70">
+        <div className="container-page py-16 sm:py-20">
+          <div className="max-w-2xl">
+            <p className="eyebrow">Why Y Cake</p>
+            <h2 className="mt-4 font-display text-[clamp(2.2rem,4.6vw,3.4rem)] leading-[1.02] tracking-[-0.035em]">
+              Baked the long way,{" "}
+              <span className="serif-italic text-rose">on purpose.</span>
+            </h2>
+          </div>
+          <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
+            {whyItems.map((item) => (
+              <div key={item.title}>
+                <span className="grid h-11 w-11 place-items-center rounded-full bg-cream text-chocolate shadow-soft">
+                  <item.icon className="h-5 w-5" aria-hidden="true" />
+                </span>
+                <h3 className="mt-4 font-display text-xl leading-tight text-espresso">
+                  {item.title}
+                </h3>
+                <p className="mt-2 text-[13px] leading-relaxed text-cocoa">
+                  {item.body}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="reviews" className="container-page py-20 sm:py-24">
+        <div className="grid gap-10 lg:grid-cols-[0.75fr_1.25fr] lg:gap-14">
+          <div className="lg:sticky lg:top-28 lg:self-start">
+            <p className="eyebrow">Reviews</p>
+            <h2 className="mt-4 font-display text-[clamp(2.2rem,4.4vw,3.3rem)] leading-[1.02] tracking-[-0.035em]">
+              Kind words,{" "}
+              <span className="serif-italic text-rose">warm cakes.</span>
+            </h2>
+            <div className="mt-6 flex items-center gap-4">
+              <p className="font-display text-[3.2rem] leading-none tracking-[-0.03em] text-espresso">
+                4.9
+              </p>
+              <div>
+                <StarRow />
+                <p className="mt-1.5 text-[11.5px] text-mocha">
+                  128 guest reviews
+                </p>
+              </div>
+            </div>
+            <div className="mt-7">
+              <a
+                href="mailto:hello@ycakeatelier.com?subject=My%20review"
+                className={buttonVariants({ variant: "secondary", size: "md" })}
+              >
+                Leave a review
+              </a>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            {reviews.map((review) => (
+              <figure
+                key={review.name}
+                className="rounded-2xl border border-sand/70 bg-[#fffdfa] p-5 sm:p-6"
+              >
+                <div
+                  className="flex items-center gap-1"
+                  role="img"
+                  aria-label="5 out of 5 stars"
+                >
+                  {Array.from({ length: 5 }).map((_, index) => (
+                    <Star
+                      key={index}
+                      className="h-3.5 w-3.5 fill-gold text-gold"
+                      aria-hidden="true"
+                    />
+                  ))}
+                </div>
+                <blockquote className="mt-3 text-[14px] leading-[1.7] text-cocoa">
+                  “{review.quote}”
+                </blockquote>
+                <figcaption className="mt-4 flex items-center justify-between gap-4">
+                  <span className="flex items-center gap-3">
+                    <span className="grid h-9 w-9 place-items-center rounded-full bg-linen text-[11px] font-medium text-espresso">
+                      {initials(review.name)}
+                    </span>
+                    <span className="text-[12.5px] font-medium text-espresso">
+                      {review.name}
+                    </span>
+                  </span>
+                  <span className="text-[11.5px] text-mocha">
+                    {review.date}
+                  </span>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        </div>
+      </section>
 
       <section id="story" className="section-wash border-y border-sand/60">
         <div className="container-page grid gap-14 py-20 sm:py-28 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-20">
@@ -328,21 +607,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="bg-porcelain py-20 sm:py-24">
-        <div className="container-page">
-          <div className="mx-auto max-w-3xl text-center">
-            <p className="eyebrow">Kind words</p>
-            <blockquote className="mt-6 font-display text-[clamp(1.75rem,3.5vw,2.85rem)] leading-[1.18] tracking-[-0.03em] text-espresso">
-              “It looked like the sketch and tasted even better. The pistachio
-              tier disappeared before the toast.”
-            </blockquote>
-            <p className="mt-6 text-[11px] font-medium uppercase tracking-[0.18em] text-mocha">
-              Mira & Sam · A garden wedding
-            </p>
-          </div>
-        </div>
-      </section>
-
       <section id="faq" className="container-page py-20 sm:py-28">
         <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
           <div className="lg:sticky lg:top-28 lg:self-start">
@@ -382,7 +646,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="relative overflow-hidden bg-espresso">
+      <section className="relative overflow-hidden bg-chocolate-deep">
         <div
           className="pointer-events-none absolute inset-0 opacity-60"
           style={{
@@ -397,7 +661,7 @@ export default async function HomePage() {
             <h2 className="mt-4 font-display text-[clamp(2.3rem,4.8vw,3.8rem)] leading-[1.02] tracking-[-0.035em] text-cream">
               You bring the occasion.{" "}
               <span className="serif-italic text-gold-soft">
-                We’ll bring the cake.
+                We&apos;ll bring the cake.
               </span>
             </h2>
             <p className="mt-5 max-w-md text-[14px] leading-relaxed text-cream/65">

@@ -17,6 +17,10 @@
   --color-ink: #1f1814;
   --color-danger: #8d3f37;
   --color-danger-soft: #f0d9d5;
+  --color-chocolate: #5d4136;
+  --color-chocolate-deep: #46312a;
+  --color-blush: #f7e3da;
+  --color-blush-soft: #fcf0ea;
 
   --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Fraunces Variable", "Iowan Old Style", Georgia, serif;
@@ -170,15 +174,15 @@ a {
     background:
       radial-gradient(
         120% 90% at 78% 8%,
-        rgba(233, 203, 196, 0.55) 0%,
+        rgba(233, 203, 196, 0.62) 0%,
         rgba(233, 203, 196, 0) 58%
       ),
       radial-gradient(
         100% 80% at 18% 88%,
-        rgba(217, 223, 210, 0.5) 0%,
+        rgba(217, 223, 210, 0.4) 0%,
         rgba(217, 223, 210, 0) 60%
       ),
-      linear-gradient(180deg, #fdfaf5 0%, #fbf7f1 62%, #f7f1e8 100%);
+      linear-gradient(180deg, #fdf8f2 0%, #fbf3ec 62%, #f8ece3 100%);
   }
 
   .arch-frame {

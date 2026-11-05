@@ -19,7 +19,7 @@ import type { SessionUser } from "@/lib/types";
 
 const navLinks = [
   { href: "/studio", label: "Design studio" },
-  { href: "/gallery", label: "The collection" },
+  { href: "/gallery", label: "The cakes" },
   { href: "/#story", label: "Our story" },
   { href: "/#faq", label: "Questions" },
 ];
