@@ -69,7 +69,8 @@ export function CakePreview({
 
   useEffect(() => {
     if (!supportsWebGl()) {
-      setFailed(true);
+      const timeout = window.setTimeout(() => setFailed(true), 0);
+      return () => window.clearTimeout(timeout);
     }
   }, []);
 

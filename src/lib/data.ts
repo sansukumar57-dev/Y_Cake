@@ -196,6 +196,7 @@ export async function getUserOrders(userId: string) {
       pickupSlot: true,
       status: true,
       createdAt: true,
+      snapshotJson: true,
       design: { select: { thumbnail: true, configJson: true } },
     },
   });

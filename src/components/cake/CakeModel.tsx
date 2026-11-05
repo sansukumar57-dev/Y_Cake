@@ -5,12 +5,9 @@ import { useEffect, useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import type { ResolvedDesign } from "@/lib/types";
 import { darkenHex, lightenHex } from "@/lib/colors";
-import {
-  createDripGeometry,
-  createRoundedCylinderGeometry,
-  seededRandom,
-} from "./geometry";
+import { createDripGeometry, createRoundedCylinderGeometry } from "./geometry";
 import { getCakeLayout, hashString, STAND_TOP } from "./layout";
+import { seededRandom } from "@/lib/random";
 import { DecorationSet } from "./decorations";
 
 function CakeStand({ bottomRadius }: { bottomRadius: number }) {

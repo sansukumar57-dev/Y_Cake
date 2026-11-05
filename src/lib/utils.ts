@@ -40,6 +40,22 @@ export function pluralize(count: number, singular: string, plural?: string) {
   return count === 1 ? singular : (plural ?? `${singular}s`);
 }
 
+export function tierLabel(index: number, count: number) {
+  if (count <= 1) {
+    return "Single tier";
+  }
+  if (count === 2) {
+    return index === 0 ? "Bottom tier" : "Top tier";
+  }
+  if (index === 0) {
+    return "Bottom tier";
+  }
+  if (index === count - 1) {
+    return "Top tier";
+  }
+  return "Middle tier";
+}
+
 export function parseBoolean(value: FormDataEntryValue | null) {
   return value === "on" || value === "true" || value === "1";
 }

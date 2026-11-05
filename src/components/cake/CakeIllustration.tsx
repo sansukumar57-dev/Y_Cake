@@ -31,11 +31,11 @@ function flower(
     <g key={`${x}-${y}`} transform={`translate(${x} ${y}) scale(${scale})`}>
       <ellipse cx="10" cy="6" rx="9" ry="4" fill="#7E8F70" opacity="0.9" transform="rotate(20)" />
       <ellipse cx="-10" cy="7" rx="7" ry="3.2" fill="#8B9B7C" opacity="0.9" transform="rotate(-25)" />
-      {petals.map((petal, index) => (
+      {petals.map((position, index) => (
         <circle
           key={`petal-${index}`}
-          cx={petal.x}
-          cy={petal.y}
+          cx={position.x}
+          cy={position.y}
           r="6.4"
           fill={index % 2 === 0 ? petal : lightenHex(petal, 0.08)}
         />

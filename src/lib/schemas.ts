@@ -97,6 +97,10 @@ export const checkoutSchema = z.object({
   notes: z.string().trim().max(500, "Keep notes under 500 characters"),
 });
 
+export const createOrderSchema = checkoutSchema.extend({
+  designId: z.string().min(1, "Choose a design"),
+});
+
 export const catalogSizeSchema = z.object({
   name: z.string().trim().min(2).max(60),
   description: z.string().trim().min(2).max(160),
